@@ -6,31 +6,42 @@ namespace Labyrinth.Helpers
 {
     public class ControllerHelper : MonoBehaviour
     {
-        // references
+        [Header("References")]
         public MovimentHelper moviment;
 
-        public void JoystickMove()
+        public void Move()
         {
+            if (moviment == null)
+            {
+                Debug.LogError("Not exists MovimentHelper on attached");
+                return; 
+            }
+
             if (Input.GetKey(KeyCode.LeftShift))
                 moviment.SetFastSpeed();
             else
                 moviment.SetSpeed();
 
-            if (Input.GetKey(KeyCode.W))
-                moviment.MoveTo(gameObject, Vector3.forward);
-            else if (Input.GetKey(KeyCode.S))
-                moviment.MoveTo(gameObject, Vector3.back);
-            else if (Input.GetKey(KeyCode.A))
-                moviment.MoveTo(gameObject, Vector3.left);
-            else if (Input.GetKey(KeyCode.D))
-                moviment.MoveTo(gameObject, Vector3.right);
+            var verticalPosition = Input.GetAxisRaw("Vertical");
+            var horizontalPosition = Input.GetAxisRaw("Horizontal");
 
+            Vector3 forward = verticalPosition * transform.forward;
+            Vector3 strafe = horizontalPosition * transform.right;
+
+            moviment.MoveTo(gameObject, forward + strafe);
+        }
+
+        public void Jump()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                moviment.Jump(gameObject);
         }
 
         #region --- Unity Events ---
-        private void Awake()
+        private void OnValidate()
         {
-            moviment = new MovimentHelper();
+            if (moviment == null)
+                moviment = GetComponent<MovimentHelper>();
         }
         #endregion
     }
