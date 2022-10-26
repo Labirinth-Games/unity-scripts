@@ -33,10 +33,14 @@ namespace Labyrinth.Helpers
 
         private void Update()
         {
-            _mouseX += Input.GetAxis("Mouse X") * sensibility;
-            _mouseY -= Input.GetAxis("Mouse Y") * sensibility;
+            var lookToUp = Input.GetAxis("Mouse Y");
 
-            var eulerAngles = new Vector3(_mouseY, _mouseX, 0);
+            if (lookToUp < 1.5f && lookToUp > -1.5f)
+                _mouseY -= lookToUp;
+
+            _mouseX += Input.GetAxis("Mouse X");
+
+            var eulerAngles = new Vector3(_mouseY * sensibility, _mouseX * sensibility, 0);
 
             transform.eulerAngles = eulerAngles;
             person.transform.eulerAngles = eulerAngles;

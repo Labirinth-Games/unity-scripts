@@ -3,26 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SubscribeEventCalback : MonoBehaviour
+namespace Labyrinth.Core
 {
-    private Action _onEvent;
-    private AsyncCallback _callback;
-
-    public void Subscriber(Action onEvent, AsyncCallback callback)
+    public class SubscribeEventCalback
     {
-        this._onEvent = onEvent;
-        this._callback = callback;
-    }
+        private Action _onEvent;
+        private Action _callback;
 
-    void Start()
-    {
-        //if (_onEvent != null)
-        //    _onEvent += _callback;
-    }
+        public void Subscribe(Action onEvent, Action callback)
+        {
+            this._onEvent = onEvent;
+            this._callback = callback;
 
-    private void OnDestroy()
-    {
-        //if (_onEvent != null)
-        //    _onEvent -= _callback;
+            _onEvent += _callback;
+        }
+
+        public void UnSubscribe()
+        {
+            if (_onEvent != null)
+                _onEvent -= _callback;
+        }
     }
 }
